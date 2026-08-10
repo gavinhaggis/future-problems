@@ -58,4 +58,4 @@ future-problems/
 
 ## Credits
 
-Rules and card list adapted from *[Medieval Solutions](www.medievalsolutions.com)* by Gavin Hanigan. Contributions welcome.
+Rules and card list adapted from *[Medieval Solutions](https://www.medievalsolutions.com)* by Gavin Hanigan. Contributions welcome.

@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Future Problems — Rules</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="css/style.css">
+<style>
+    html, body { overflow: hidden; height: 100vh; }
+    .rules-container {
+        width: 100%;
+        max-width: 800px;
+        margin: 46px auto 20px;
+        padding: 0 10px;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+        height: calc(100vh - 66px);
+    }
+    .progress-indicator {
+        position: fixed; top: 0; left: 0; width: 100vw; height: 16px;
+        display: flex; gap: 2px; z-index: 100;
+        background: rgba(10,10,26,0.95); padding: 4px 6px; box-sizing: border-box;
+    }
+    .progress-card {
+        flex: 1; height: 8px; background: var(--CardBackground);
+        border-radius: 4px; opacity: 0.5; cursor: pointer; position: relative; overflow: hidden;
+        transition: all 0.3s ease;
+    }
+    .progress-card::before {
+        content: ''; position: absolute; inset: 0; width: 0%;
+        background: linear-gradient(90deg, var(--Important), var(--Title));
+        border-radius: 4px; transition: width 0.4s ease;
+    }
+    .progress-card.active { opacity: 1; }
+    .progress-card.active::before { width: 100%; }
+    .progress-card:hover { opacity: 1; box-shadow: 0 0 10px var(--Important); }
+
+    .rule-card {
+        background: var(--CardBackground);
+        border: 2px solid var(--CardBorder);
+        border-radius: 10px;
+        margin-bottom: 10px;
+        overflow: hidden;
+        box-shadow: 0 0 20px rgba(0, 255, 65, 0.2);
+        flex-shrink: 0;
+    }
+    .rule-card:hover { box-shadow: 0 0 30px rgba(0, 255, 65, 0.4); border-color: var(--Important); }
+    .rule-header {
+        padding: 8px 14px;
+        background: linear-gradient(135deg, rgba(0, 102, 204, 0.2), rgba(0, 255, 65, 0.1));
+        border-bottom: 1px solid var(--CardBorder);
+        cursor: pointer; display: flex; justify-content: space-between; align-items: center;
+    }
+    .rule-header:hover { background: linear-gradient(135deg, rgba(0, 102, 204, 0.3), rgba(0, 255, 65, 0.2)); }
+    .rule-number { font-size: 26px; color: var(--Title); text-shadow: 0 0 10px var(--Title); }
+    .rule-expand-icon { color: var(--Important); font-size: 20px; transition: transform 0.3s ease; }
+    .rule-card.expanded .rule-expand-icon { transform: rotate(180deg); }
+    .rule-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; padding: 0 14px; }
+    .rule-card.expanded .rule-content { max-height: 1000px; padding: 6px 14px 16px; }
+    .rule-text { font-size: 19px; line-height: 1.6; margin: 8px 0; }
+    .important-text { color: var(--Important); font-weight: bold; text-shadow: 0 0 5px var(--Important); display: inline-block; }
+    .next-indicator { text-align: center; font-size: 14px; color: var(--Title); margin: 20px 0; animation: blink 0.7s infinite; }
+    .language-selector { position: fixed; top: 30px; right: 14px; z-index: 101; }
+    .language-selector select {
+        font-family: 'VT323', monospace; background: var(--CardBackground); border: 1px solid var(--CardBorder);
+        color: var(--BodyText); border-radius: 5px; padding: 2px 4px; cursor: pointer; font-size: 16px;
+    }
+    .final-buttons a {
+        display: inline-block; padding: 10px 18px; margin: 6px;
+        background: var(--ButtonBackground); color: var(--ButtonText);
+        border: 2px solid var(--ButtonBorder); border-radius: 6px; text-decoration: none;
+        font-family: 'VT323', monospace; font-size: 18px; transition: all 0.2s ease;
+    }
+    .final-buttons a:hover { background: var(--ButtonBorder); color: var(--CardBackground); box-shadow: 0 0 15px var(--ButtonBorder); }
+    @media (max-width: 768px) {
+        .rules-container { margin: 42px auto 10px; height: calc(100vh - 60px); }
+    }
+</style>
+</head>
+<body>
+
+<div class="progress-indicator" id="progressIndicator">
+    <div class="progress-card" data-card="0"></div>
+    <div class="progress-card" data-card="1"></div>
+    <div class="progress-card" data-card="2"></div>
+    <div class="progress-card" data-card="3"></div>
+    <div class="progress-card" data-card="4"></div>
+    <div class="progress-card" data-card="5"></div>
+</div>
+
+<div class="language-selector">
+    <select id="languageSelect" aria-label="Language selector">
+        <option value="EN">English</option>
+        <option value="FI">Suomi</option>
+        <option value="RO">Română</option>
+        <option value="RU">Русский</option>
+    </select>
+</div>
+
+<div id="app">
+<div class="rules-container">
+
+    <div class="rule-card" id="rule1" data-index="0">
+        <div class="rule-header"><div class="rule-number">!Setup!</div><div class="rule-expand-icon">▼</div></div>
+        <div class="rule-content">
+            <div class="rule-text" data-slot="1"></div>
+            <div class="rule-text" data-slot="2"></div>
+            <div class="rule-text" data-slot="3"></div>
+        </div>
+    </div>
+
+    <div class="rule-card" id="rule2" data-index="1">
+        <div class="rule-header"><div class="rule-number">!Crisis!</div><div class="rule-expand-icon">▼</div></div>
+        <div class="rule-content">
+            <div class="rule-text" data-slot="1"></div>
+            <div class="rule-text" data-slot="2"></div>
+            <div class="rule-text" data-slot="3"></div>
+        </div>
+    </div>
+
+    <div class="rule-card" id="rule3" data-index="2">
+        <div class="rule-header"><div class="rule-number">!Solutions!</div><div class="rule-expand-icon">▼</div></div>
+        <div class="rule-content">
+            <div class="rule-text" data-slot="1"></div>
+            <div class="rule-text" data-slot="2"></div>
+            <div class="rule-text" data-slot="3"></div>
+        </div>
+    </div>
+
+    <div class="rule-card" id="rule4" data-index="3">
+        <div class="rule-header"><div class="rule-number">!Continuation!</div><div class="rule-expand-icon">▼</div></div>
+        <div class="rule-content">
+            <div class="rule-text" data-slot="1"></div>
+            <div class="rule-text" data-slot="2"></div>
+            <div class="rule-text" data-slot="3"></div>
+        </div>
+    </div>
+
+    <div class="rule-card" id="rule5" data-index="4">
+        <div class="rule-header"><div class="rule-number">!End!</div><div class="rule-expand-icon">▼</div></div>
+        <div class="rule-content">
+            <div class="rule-text" data-slot="1"></div>
+            <div class="rule-text" data-slot="2"></div>
+            <div class="rule-text" data-slot="3"></div>
+        </div>
+    </div>
+
+    <div class="rule-card" id="rule6" data-index="5">
+        <div class="rule-header"><div class="rule-number">!First Round!</div><div class="rule-expand-icon">▼</div></div>
+        <div class="rule-content">
+            <div class="rule-text" data-slot="1"></div>
+            <div class="rule-text" data-slot="2"></div>
+            <div class="rule-text" data-slot="3"></div>
+        </div>
+    </div>
+
+    <div class="rule-card" id="rule7" data-index="6">
+        <div class="rule-header"><div class="rule-number">!Play!</div><div class="rule-expand-icon">▼</div></div>
+        <div class="rule-content">
+            <p class="rule-text" style="font-size:22px;"><i class="translatable-share"></i></p>
+            <div class="final-buttons">
+                <a href="index.html">▶ Play Now</a>
+                <a href="https://github.com/" target="_blank" rel="noopener">GitHub</a>
+            </div>
+            <div class="next-indicator translatable-restart">▲ Tap to restart ▲</div>
+        </div>
+    </div>
+
+</div>
+</div>
+
+<script>
+const translations = {
+    "EN": {
+        "Share_text": "Free & open source. Fork it, remix it, play it with anyone.",
+        "Restart_text": "Tap to restart",
+        "C1_name": "Setup", "C1_text_1": "**SOME** of the deck is placed on the table. This is the **SCENARIO** pile.",
+        "C1_text_2": "All solvers draw **SIX** cards and one player becomes the **CRISIS**.",
+        "C1_text_3": "Roles rotate every round — everyone gets a turn as CRISIS.",
+        "C2_name": "Crisis", "C2_text_1": "The crisis draws **ONE** card from the scenario pile and narrates why it is a critical **problem** of the future.",
+        "C2_text_2": "Be dramatic. Be specific. The weirder the framing, the better the round.",
+        "C2_text_3": "",
+        "C3_name": "Solutions", "C3_text_1": "Every other solver secretly picks **TWO** cards from their hand as their solution.",
+        "C3_text_2": "True future solvers **DO NOT** respect conventional logic — commit to your **wildest** combination.",
+        "C3_text_3": "When all solutions are locked in, take turns revealing and arguing your case aloud.",
+        "C4_name": "Continuation", "C4_text_1": "The crisis awards the problem card to the solver with the **best** solution.",
+        "C4_text_2": "That's **ONE** point, and the card becomes their trophy.",
+        "C4_text_3": "Everyone refills to six cards, the CRISIS role passes on, and a new round begins.",
+        "C5_name": "End", "C5_text_1": "Play continues until the **scenario** pile runs out, or a solver hits the **target score**.",
+        "C5_text_2": "Whoever has the **most points** wins the session!",
+        "C5_text_3": "",
+        "C6_name": "First Round", "C6_text_1": "The first CRISIS is whoever last used a **device** with a screen.",
+        "C6_text_2": "They open by describing the facility everyone **works** in, its **mission**, and the system it all **monitors**.",
+        "C6_text_3": "Start small — a short, sharp scenario beats an overcomplicated one."
+    },
+    "FI": {
+        "Share_text": "Ilmainen ja avoimen lähdekoodin. Haaroita, muokkaa, pelaa kenen tahansa kanssa.",
+        "Restart_text": "Palaa alkuun",
+        "C1_name": "Pelin aloitus", "C1_text_1": "**OSA** pakasta asetetaan pöydälle. Tämä on **SKENAARIO**-pino.",
+        "C1_text_2": "Kaikki ratkaisijat nostavat **KUUSI** korttia, ja yksi pelaaja valitaan **KRIISIKSI**.",
+        "C1_text_3": "Rooli kiertää joka kierroksella — kaikki pääsevät KRIISIKSI vuorollaan.",
+        "C2_name": "Kriisi", "C2_text_1": "Kriisi nostaa skenaariopinosta **YHDEN** kortin ja kertoo, miksi se on tulevaisuuden kriittinen **ongelma**.",
+        "C2_text_2": "Ole dramaattinen ja tarkka. Mitä oudompi kehys, sitä parempi kierros.",
+        "C2_text_3": "",
+        "C3_name": "Ratkaisut", "C3_text_1": "Jokainen muu ratkaisija valitsee salaa **KAKSI** korttia kädestään ratkaisuksi.",
+        "C3_text_2": "Todelliset tulevaisuuden ratkaisijat **EIVÄT** kunnioita tavanomaista logiikkaa — sitoudu **hulluimpaan** yhdistelmääsi.",
+        "C3_text_3": "Kun kaikki ratkaisut on lukittu, paljastakaa vuorotellen ja perustelkaa ääneen.",
+        "C4_name": "Jatka peliä", "C4_text_1": "Kriisi myöntää ongelmakortin sille, jolla oli **paras** ratkaisu.",
+        "C4_text_2": "Tämä on **YKSI** piste, ja kortista tulee heidän pystinsä.",
+        "C4_text_3": "Kaikki täydentävät kätensä kuuteen, KRIISI vaihtuu, ja uusi kierros alkaa.",
+        "C5_name": "Pelin päätös", "C5_text_1": "Peli jatkuu, kunnes **skenaariopino** loppuu tai joku saavuttaa **tavoitepisteet**.",
+        "C5_text_2": "Eniten pisteitä kerännyt voittaa pelin!",
+        "C5_text_3": "",
+        "C6_name": "Kierros Yksi", "C6_text_1": "Ensimmäinen KRIISI on se, joka viimeksi käytti näytöllistä **laitetta**.",
+        "C6_text_2": "Hän aloittaa kuvailemalla laitosta, jossa kaikki **TYÖSKENTELEVÄT**, sen **TEHTÄVÄN**, ja mitä järjestelmää se **VALVOO**.",
+        "C6_text_3": "Aloita pienesti — lyhyt ja terävä skenaario voittaa ylimonimutkaisen."
+    },
+    "RO": {
+        "Share_text": "Gratuit și open source. Fork-uiește-l, remixează-l, joacă-l cu oricine.",
+        "Restart_text": "Apasă pentru a reîncepe",
+        "C1_name": "Setare", "C1_text_1": "O **PARTE** din pachet se pune pe masă. Acesta este pachetul de **SCENARIU**.",
+        "C1_text_2": "Toți rezolvitorii trag **ȘASE** cărți, iar un jucător devine **CRIZA**.",
+        "C1_text_3": "Rolul se rotește în fiecare rundă — toată lumea ajunge CRIZĂ pe rând.",
+        "C2_name": "Criza", "C2_text_1": "Criza trage **O** carte din pachetul de scenariu și povestește de ce este o **problemă** critică a viitorului.",
+        "C2_text_2": "Fii dramatic și specific. Cu cât cadrul e mai ciudat, cu atât runda e mai bună.",
+        "C2_text_3": "",
+        "C3_name": "Soluții", "C3_text_1": "Fiecare alt rezolvitor alege în secret **DOUĂ** cărți din mână drept soluție.",
+        "C3_text_2": "Adevărații rezolvitori ai viitorului **NU** respectă logica convențională — mizează pe cea mai **nebunească** combinație.",
+        "C3_text_3": "Când toate soluțiile sunt fixate, dezvăluiți-le pe rând și argumentați cu voce tare.",
+        "C4_name": "Continuarea", "C4_text_1": "Criza acordă cartea problemă rezolvitorului cu cea mai **bună** soluție.",
+        "C4_text_2": "Acesta e **UN** punct, iar cartea devine trofeul lor.",
+        "C4_text_3": "Toată lumea își completează mâna la șase cărți, rolul de CRIZĂ trece mai departe, și o nouă rundă începe.",
+        "C5_name": "Sfârșitul", "C5_text_1": "Jocul continuă până când pachetul de **scenariu** se termină sau cineva atinge **scorul țintă**.",
+        "C5_text_2": "Cine are cele mai multe puncte câștigă sesiunea!",
+        "C5_text_3": "",
+        "C6_name": "Prima rundă", "C6_text_1": "Prima CRIZĂ este ultima persoană care a folosit un **dispozitiv** cu ecran.",
+        "C6_text_2": "Aceasta începe descriind facilitatea în care toți **LUCREAZĂ**, **MISIUNEA** ei, și ce sistem **MONITORIZEAZĂ**.",
+        "C6_text_3": "Începeți simplu — un scenariu scurt și clar bate unul supracomplicat."
+    },
+    "RU": {
+        "Share_text": "Бесплатно и с открытым исходным кодом. Форкните, переделайте, играйте с кем угодно.",
+        "Restart_text": "Нажмите для перезапуска",
+        "C1_name": "Настройка", "C1_text_1": "**ЧАСТЬ** колоды выкладывается на стол. Это стопка **СЦЕНАРИЯ**.",
+        "C1_text_2": "Все решатели берут по **ШЕСТЬ** карт, а один игрок становится **КРИЗИСОМ**.",
+        "C1_text_3": "Роль переходит каждый раунд — все побывают КРИЗИСОМ по очереди.",
+        "C2_name": "Кризис", "C2_text_1": "Кризис берёт **ОДНУ** карту из стопки сценария и рассказывает, почему это критическая **проблема** будущего.",
+        "C2_text_2": "Будьте драматичны и конкретны. Чем страннее подача, тем лучше раунд.",
+        "C2_text_3": "",
+        "C3_name": "Решения", "C3_text_1": "Каждый решатель тайно выбирает **ДВЕ** карты из своей руки как решение.",
+        "C3_text_2": "Настоящие решатели будущего **НЕ** уважают традиционную логику — сделайте ставку на самую **безумную** комбинацию.",
+        "C3_text_3": "Когда все решения зафиксированы, раскрывайте их по очереди и аргументируйте вслух.",
+        "C4_name": "Продолжение", "C4_text_1": "Кризис вручает карту проблемы тому, у кого было **лучшее** решение.",
+        "C4_text_2": "Это **ОДИН** балл, и карта становится их трофеем.",
+        "C4_text_3": "Все добирают руку до шести карт, роль КРИЗИСА переходит дальше, начинается новый раунд.",
+        "C5_name": "Конец", "C5_text_1": "Игра продолжается, пока стопка **сценария** не закончится или кто-то не наберёт **целевой счёт**.",
+        "C5_text_2": "Побеждает игрок с наибольшим количеством очков!",
+        "C5_text_3": "",
+        "C6_name": "Первый раунд", "C6_text_1": "Первым КРИЗИСОМ становится тот, кто последним пользовался **устройством** с экраном.",
+        "C6_text_2": "Он начинает с описания объекта, где все **РАБОТАЮТ**, его **МИССИИ**, и какую систему все **МОНИТОРЯТ**.",
+        "C6_text_3": "Начните скромно — короткий и чёткий сценарий лучше переусложнённого."
+    }
+};
+
+const cards = document.querySelectorAll('.rule-card');
+const progressCards = document.querySelectorAll('.progress-card');
+
+function processImportantText(text) {
+    if (!text) return '';
+    return text.replace(/\*\*(.*?)\*\*/g, '<span class="important-text">$1</span>');
+}
+
+function updateTranslations(lang) {
+    if (!translations[lang]) return;
+    for (let i = 1; i <= 6; i++) {
+        const t = translations[lang];
+        const titleEl = document.querySelector(`#rule${i} .rule-number`);
+        if (titleEl) titleEl.innerHTML = t[`C${i}_name`];
+        const slots = document.querySelectorAll(`#rule${i} [data-slot]`);
+        slots.forEach((el, j) => {
+            const key = `C${i}_text_${j + 1}`;
+            if (t[key] !== undefined) el.innerHTML = processImportantText(t[key]);
+        });
+    }
+    document.querySelectorAll('.translatable-share').forEach(el => { el.textContent = translations[lang]['Share_text']; });
+    document.querySelectorAll('.translatable-restart').forEach(el => { el.innerHTML = `▲ ${translations[lang]['Restart_text']} ▲`; });
+    document.getElementById('languageSelect').value = lang;
+}
+
+cards.forEach((card, index) => {
+    card.querySelector('.rule-header').addEventListener('click', () => {
+        const isExpanded = card.classList.contains('expanded');
+        cards.forEach(c => c.classList.remove('expanded'));
+        if (!isExpanded) {
+            card.classList.add('expanded');
+            progressCards.forEach((pc, i) => pc.classList.toggle('active', i <= index));
+        } else {
+            progressCards.forEach(pc => pc.classList.remove('active'));
+        }
+    });
+});
+
+progressCards.forEach((pc, index) => {
+    pc.addEventListener('click', () => {
+        cards.forEach(c => c.classList.remove('expanded'));
+        cards[index].classList.add('expanded');
+        progressCards.forEach((c2, i) => c2.classList.toggle('active', i <= index));
+        cards[index].scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+});
+
+document.getElementById('rule7').addEventListener('click', (e) => {
+    if (e.target.classList.contains('translatable-restart')) {
+        cards.forEach(c => c.classList.remove('expanded'));
+        progressCards.forEach(c => c.classList.remove('active'));
+    }
+});
+
+document.getElementById('languageSelect').addEventListener('change', function () {
+    updateTranslations(this.value);
+});
+
+updateTranslations('EN');
+</script>
+</body>
+</html>

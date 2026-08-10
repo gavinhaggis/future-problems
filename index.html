@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Future Problems</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="top-bar">
+    <a href="rules.html">RULES</a>
+    <a href="https://github.com/" target="_blank" rel="noopener">GITHUB</a>
+</div>
+
+<div id="app">
+
+    <!-- TITLE -->
+    <section class="view" id="view-title">
+        <h1 class="blink">FUTURE&nbsp;PROBLEMS</h1>
+        <p class="dim">A free, open-source party game of impossible tomorrows.</p>
+        <button id="btn-new-session">&gt; NEW SESSION</button>
+        <div class="footer-nav"><a href="rules.html" style="color:var(--BodyText)">How to play &rarr;</a></div>
+    </section>
+
+    <!-- SETUP -->
+    <section class="view" id="view-setup">
+        <h2>SETUP</h2>
+        <p class="dim">3&ndash;8 solvers, one device, passed around the table.</p>
+        <div id="setup-players" style="width:100%"></div>
+        <button id="btn-add-player" class="ghost">+ ADD SOLVER</button>
+        <div style="margin-top:16px;width:100%;max-width:260px;">
+            <label for="target-score">Target score</label>
+            <input type="number" id="target-score" value="3" min="1" max="20">
+        </div>
+        <button id="btn-start-game" style="margin-top:20px;">&gt; BEGIN</button>
+    </section>
+
+    <!-- HANDOFF (generic privacy gate) -->
+    <section class="view" id="view-handoff">
+        <div class="handoff-box">
+            <p class="dim">PASS THE DEVICE TO</p>
+            <div class="handoff-name blink" id="handoff-name"></div>
+            <p id="handoff-subtitle" class="dim"></p>
+            <button id="btn-handoff-continue" style="margin-top:20px;">&gt; TAP TO REVEAL</button>
+        </div>
+    </section>
+
+    <!-- CRISIS DRAW -->
+    <section class="view" id="view-crisis-draw">
+        <h2>ROUND <span id="crisis-round-num"></span> — CRISIS</h2>
+        <p><span id="crisis-name"></span>, draw the problem card and narrate it.</p>
+        <p class="dim"><span id="crisis-pile-count"></span> cards remain in the scenario pile</p>
+        <div id="crisis-card-zone" style="width:100%;display:flex;justify-content:center;"></div>
+        <button id="btn-draw-trouble">&gt; DRAW PROBLEM CARD</button>
+        <button id="btn-crisis-ready" style="display:none;">&gt; NARRATED — PASS THE DEVICE</button>
+    </section>
+
+    <!-- SOLVE -->
+    <section class="view" id="view-solve">
+        <h2><span id="solve-player-name"></span> — SOLVE</h2>
+        <p class="dim">The crisis:</p>
+        <div id="solve-trouble-zone" style="width:100%;display:flex;justify-content:center;"></div>
+        <p class="dim" style="margin-top:14px;">Pick exactly two cards from your hand as your solution:</p>
+        <div class="hand-grid" id="solve-hand-grid"></div>
+        <button id="btn-lock-in" disabled>&gt; LOCK IN</button>
+    </section>
+
+    <!-- REVEAL -->
+    <section class="view" id="view-reveal">
+        <h2>ALL SOLUTIONS IN</h2>
+        <p class="dim">Pass the device back to the CRISIS. Each solver argues their case aloud.</p>
+        <div id="reveal-trouble-zone" style="width:100%;display:flex;justify-content:center;"></div>
+        <div id="reveal-list" style="width:100%;"></div>
+        <button id="btn-goto-judge">&gt; ALL ARGUED — JUDGE</button>
+    </section>
+
+    <!-- JUDGE -->
+    <section class="view" id="view-judge">
+        <h2>JUDGE THE CRISIS</h2>
+        <p class="dim">Tap the winning solution.</p>
+        <div id="judge-trouble-zone" style="width:100%;display:flex;justify-content:center;"></div>
+        <div id="judge-list" style="width:100%;"></div>
+    </section>
+
+    <!-- ROUND RESULT -->
+    <section class="view" id="view-round-result">
+        <h2>&#9733; <span id="result-winner-name"></span> WINS THE ROUND</h2>
+        <div class="scoreboard" id="result-scoreboard"></div>
+        <button id="btn-next-round">&gt; NEXT ROUND</button>
+    </section>
+
+    <!-- END -->
+    <section class="view" id="view-end">
+        <h1>GAME OVER</h1>
+        <h2><span id="end-winner-name"></span></h2>
+        <div class="scoreboard" id="end-scoreboard"></div>
+        <button id="btn-play-again">&gt; PLAY AGAIN</button>
+        <button id="btn-new-game" class="ghost">&gt; NEW SESSION</button>
+    </section>
+
+</div>
+
+<script src="js/app.js"></script>
+</body>
+</html>

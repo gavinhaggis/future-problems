@@ -1,0 +1,910 @@
+[
+  {
+    "id": 1,
+    "en": "100% Brain Use"
+  },
+  {
+    "id": 2,
+    "en": "3D Printed Cities"
+  },
+  {
+    "id": 3,
+    "en": "Abduction"
+  },
+  {
+    "id": 4,
+    "en": "Acid Rain"
+  },
+  {
+    "id": 5,
+    "en": "Aging Backwards"
+  },
+  {
+    "id": 6,
+    "en": "AI Life Coach"
+  },
+  {
+    "id": 7,
+    "en": "AI Revolt"
+  },
+  {
+    "id": 8,
+    "en": "Alien Movie"
+  },
+  {
+    "id": 9,
+    "en": "Alien Podcast"
+  },
+  {
+    "id": 10,
+    "en": "Alien Virus"
+  },
+  {
+    "id": 11,
+    "en": "Alternative Dimension"
+  },
+  {
+    "id": 12,
+    "en": "Ancient Technology"
+  },
+  {
+    "id": 13,
+    "en": "Ancient Theme Park"
+  },
+  {
+    "id": 14,
+    "en": "Android Rights"
+  },
+  {
+    "id": 15,
+    "en": "Animal Translator"
+  },
+  {
+    "id": 16,
+    "en": "Apollo Mission"
+  },
+  {
+    "id": 17,
+    "en": "Area 51"
+  },
+  {
+    "id": 18,
+    "en": "Arnold Schwarzenegger"
+  },
+  {
+    "id": 19,
+    "en": "Artifical Gravity Tax"
+  },
+  {
+    "id": 20,
+    "en": "Awkward Holograms"
+  },
+  {
+    "id": 21,
+    "en": "Big Brother"
+  },
+  {
+    "id": 22,
+    "en": "Biological Engineering"
+  },
+  {
+    "id": 23,
+    "en": "Black Holes"
+  },
+  {
+    "id": 24,
+    "en": "Blackout"
+  },
+  {
+    "id": 25,
+    "en": "Blob"
+  },
+  {
+    "id": 26,
+    "en": "Body Swapping"
+  },
+  {
+    "id": 27,
+    "en": "Brain Implants"
+  },
+  {
+    "id": 28,
+    "en": "Brain Transplant"
+  },
+  {
+    "id": 29,
+    "en": "Breathing Tax"
+  },
+  {
+    "id": 30,
+    "en": "Broken Shields"
+  },
+  {
+    "id": 31,
+    "en": "Butterfly Effect"
+  },
+  {
+    "id": 32,
+    "en": "City under a Dome"
+  },
+  {
+    "id": 33,
+    "en": "Clone Riots"
+  },
+  {
+    "id": 34,
+    "en": "Cloning Error"
+  },
+  {
+    "id": 35,
+    "en": "Coffee Planet"
+  },
+  {
+    "id": 36,
+    "en": "Colonists"
+  },
+  {
+    "id": 37,
+    "en": "Consciouness Copying"
+  },
+  {
+    "id": 38,
+    "en": "Contaminated Supplies"
+  },
+  {
+    "id": 39,
+    "en": "Crop Failure"
+  },
+  {
+    "id": 40,
+    "en": "Cryo Microtransactions"
+  },
+  {
+    "id": 41,
+    "en": "Cryosleep"
+  },
+  {
+    "id": 42,
+    "en": "Cryptic Radio Message"
+  },
+  {
+    "id": 43,
+    "en": "Cult"
+  },
+  {
+    "id": 44,
+    "en": "Currency Crash"
+  },
+  {
+    "id": 45,
+    "en": "Cyber Attack"
+  },
+  {
+    "id": 46,
+    "en": "Cyborgs"
+  },
+  {
+    "id": 47,
+    "en": "Darkish Matter"
+  },
+  {
+    "id": 48,
+    "en": "Data Corruption"
+  },
+  {
+    "id": 49,
+    "en": "Data Theft"
+  },
+  {
+    "id": 50,
+    "en": "Death Star"
+  },
+  {
+    "id": 51,
+    "en": "Democracy 2.0"
+  },
+  {
+    "id": 52,
+    "en": "Disease Outbreak"
+  },
+  {
+    "id": 53,
+    "en": "DNA Modification"
+  },
+  {
+    "id": 54,
+    "en": "Dock is Overloaded"
+  },
+  {
+    "id": 55,
+    "en": "Doomsday"
+  },
+  {
+    "id": 56,
+    "en": "Doppelgängers"
+  },
+  {
+    "id": 57,
+    "en": "Dream Access"
+  },
+  {
+    "id": 58,
+    "en": "Drone Crash"
+  },
+  {
+    "id": 59,
+    "en": "Drones"
+  },
+  {
+    "id": 60,
+    "en": "Drought"
+  },
+  {
+    "id": 61,
+    "en": "Drunk Drivers"
+  },
+  {
+    "id": 62,
+    "en": "Dust"
+  },
+  {
+    "id": 63,
+    "en": "Electricity Ban"
+  },
+  {
+    "id": 64,
+    "en": "Email"
+  },
+  {
+    "id": 65,
+    "en": "Emoji Update"
+  },
+  {
+    "id": 66,
+    "en": "Energy field"
+  },
+  {
+    "id": 67,
+    "en": "Engine Failure"
+  },
+  {
+    "id": 68,
+    "en": "Evil Scientist"
+  },
+  {
+    "id": 69,
+    "en": "Exoplanen Tourism"
+  },
+  {
+    "id": 70,
+    "en": "Exploding Batteries"
+  },
+  {
+    "id": 71,
+    "en": "Failed Experiment"
+  },
+  {
+    "id": 72,
+    "en": "Fallout Shelter"
+  },
+  {
+    "id": 73,
+    "en": "Fascist Clones"
+  },
+  {
+    "id": 74,
+    "en": "Faster than Light Travel"
+  },
+  {
+    "id": 75,
+    "en": "Flying Cars"
+  },
+  {
+    "id": 76,
+    "en": "Flying Disc"
+  },
+  {
+    "id": 77,
+    "en": "Food Poisoning"
+  },
+  {
+    "id": 78,
+    "en": "Food Rationing"
+  },
+  {
+    "id": 79,
+    "en": "Food Shortage"
+  },
+  {
+    "id": 80,
+    "en": "Forty-two"
+  },
+  {
+    "id": 81,
+    "en": "Friendly Aliens"
+  },
+  {
+    "id": 82,
+    "en": "Fungus People"
+  },
+  {
+    "id": 83,
+    "en": "Fusion Reactor"
+  },
+  {
+    "id": 84,
+    "en": "Future Tourists"
+  },
+  {
+    "id": 85,
+    "en": "Galactic Shipping Delays"
+  },
+  {
+    "id": 86,
+    "en": "Gambling"
+  },
+  {
+    "id": 87,
+    "en": "Gigantic Eye"
+  },
+  {
+    "id": 88,
+    "en": "Gigantic Monster"
+  },
+  {
+    "id": 89,
+    "en": "Global Warming"
+  },
+  {
+    "id": 90,
+    "en": "God"
+  },
+  {
+    "id": 91,
+    "en": "Gravity Failure"
+  },
+  {
+    "id": 92,
+    "en": "Growing Meat"
+  },
+  {
+    "id": 93,
+    "en": "Hackers"
+  },
+  {
+    "id": 94,
+    "en": "Heatwave"
+  },
+  {
+    "id": 95,
+    "en": "Hologram Mafia"
+  },
+  {
+    "id": 96,
+    "en": "Holograms on Strike"
+  },
+  {
+    "id": 97,
+    "en": "Horny AI"
+  },
+  {
+    "id": 98,
+    "en": "Hostile Aliens"
+  },
+  {
+    "id": 99,
+    "en": "Hull Breach"
+  },
+  {
+    "id": 100,
+    "en": "Human Cloning"
+  },
+  {
+    "id": 101,
+    "en": "Humanoids"
+  },
+  {
+    "id": 102,
+    "en": "Illegal Underwear"
+  },
+  {
+    "id": 103,
+    "en": "Immortality"
+  },
+  {
+    "id": 104,
+    "en": "Infestation"
+  },
+  {
+    "id": 105,
+    "en": "Infested Moon Colony"
+  },
+  {
+    "id": 106,
+    "en": "Infinite Poetry"
+  },
+  {
+    "id": 107,
+    "en": "Intergalactic Bowling"
+  },
+  {
+    "id": 108,
+    "en": "Invisibility"
+  },
+  {
+    "id": 109,
+    "en": "Jazz Station"
+  },
+  {
+    "id": 110,
+    "en": "Karaoke"
+  },
+  {
+    "id": 111,
+    "en": "Laser Guns"
+  },
+  {
+    "id": 112,
+    "en": "Laser Swords"
+  },
+  {
+    "id": 113,
+    "en": "Launch into Space"
+  },
+  {
+    "id": 114,
+    "en": "Livestream"
+  },
+  {
+    "id": 115,
+    "en": "Lose Contact"
+  },
+  {
+    "id": 116,
+    "en": "Lost Ship"
+  },
+  {
+    "id": 117,
+    "en": "Mars Mission"
+  },
+  {
+    "id": 118,
+    "en": "Megalopolis"
+  },
+  {
+    "id": 119,
+    "en": "Meltdown"
+  },
+  {
+    "id": 120,
+    "en": "Melted Ice Caps"
+  },
+  {
+    "id": 121,
+    "en": "Memory Loss"
+  },
+  {
+    "id": 122,
+    "en": "Meteors"
+  },
+  {
+    "id": 123,
+    "en": "Mind Hackers"
+  },
+  {
+    "id": 124,
+    "en": "Mind Reading"
+  },
+  {
+    "id": 125,
+    "en": "Monkey Overlords"
+  },
+  {
+    "id": 126,
+    "en": "Monolith"
+  },
+  {
+    "id": 127,
+    "en": "Moon Cheese"
+  },
+  {
+    "id": 128,
+    "en": "Moon War"
+  },
+  {
+    "id": 129,
+    "en": "Moonball"
+  },
+  {
+    "id": 130,
+    "en": "Mouth Delivery"
+  },
+  {
+    "id": 131,
+    "en": "Nano Flatpack"
+  },
+  {
+    "id": 132,
+    "en": "Nano technology"
+  },
+  {
+    "id": 133,
+    "en": "Nanobot Unionisation"
+  },
+  {
+    "id": 134,
+    "en": "Navigation Error"
+  },
+  {
+    "id": 135,
+    "en": "New Currency"
+  },
+  {
+    "id": 136,
+    "en": "New Species"
+  },
+  {
+    "id": 137,
+    "en": "New World"
+  },
+  {
+    "id": 138,
+    "en": "New Wormhole"
+  },
+  {
+    "id": 139,
+    "en": "No Parking"
+  },
+  {
+    "id": 140,
+    "en": "Nuclear War"
+  },
+  {
+    "id": 141,
+    "en": "Oracle"
+  },
+  {
+    "id": 142,
+    "en": "Orbit at Capacity"
+  },
+  {
+    "id": 143,
+    "en": "Overheating"
+  },
+  {
+    "id": 144,
+    "en": "Overpopulation"
+  },
+  {
+    "id": 145,
+    "en": "Oxygen Leak"
+  },
+  {
+    "id": 146,
+    "en": "Pill Meal"
+  },
+  {
+    "id": 147,
+    "en": "Pirates"
+  },
+  {
+    "id": 148,
+    "en": "Planet Collision"
+  },
+  {
+    "id": 149,
+    "en": "Planet Discovery"
+  },
+  {
+    "id": 150,
+    "en": "Planet-sized Spaceship"
+  },
+  {
+    "id": 151,
+    "en": "Poop Drones"
+  },
+  {
+    "id": 152,
+    "en": "Pope"
+  },
+  {
+    "id": 153,
+    "en": "Portal"
+  },
+  {
+    "id": 154,
+    "en": "Power Surge"
+  },
+  {
+    "id": 155,
+    "en": "President Kidnapped"
+  },
+  {
+    "id": 156,
+    "en": "Quantum Hamsters"
+  },
+  {
+    "id": 157,
+    "en": "Quarantine"
+  },
+  {
+    "id": 158,
+    "en": "Racism 2.0"
+  },
+  {
+    "id": 159,
+    "en": "Radiation Pill"
+  },
+  {
+    "id": 160,
+    "en": "Radiation Spill"
+  },
+  {
+    "id": 161,
+    "en": "Rainstorm"
+  },
+  {
+    "id": 162,
+    "en": "Re-animation"
+  },
+  {
+    "id": 163,
+    "en": "Reactor Leak"
+  },
+  {
+    "id": 164,
+    "en": "Realtime Movies"
+  },
+  {
+    "id": 165,
+    "en": "Red Button"
+  },
+  {
+    "id": 166,
+    "en": "Robot Dog"
+  },
+  {
+    "id": 167,
+    "en": "Seeing the Future"
+  },
+  {
+    "id": 168,
+    "en": "Self-warming Clothes"
+  },
+  {
+    "id": 169,
+    "en": "Senate"
+  },
+  {
+    "id": 170,
+    "en": "Send Scouts"
+  },
+  {
+    "id": 171,
+    "en": "Sentient Toaster"
+  },
+  {
+    "id": 172,
+    "en": "Sex Robots"
+  },
+  {
+    "id": 173,
+    "en": "Ship Battle"
+  },
+  {
+    "id": 174,
+    "en": "Shipping Delays"
+  },
+  {
+    "id": 175,
+    "en": "Shrinking"
+  },
+  {
+    "id": 176,
+    "en": "Signal Jam"
+  },
+  {
+    "id": 177,
+    "en": "Simulation"
+  },
+  {
+    "id": 178,
+    "en": "Skin Eating"
+  },
+  {
+    "id": 179,
+    "en": "Sleep Crises"
+  },
+  {
+    "id": 180,
+    "en": "Solar Storm"
+  },
+  {
+    "id": 181,
+    "en": "Space Bureaucracy"
+  },
+  {
+    "id": 182,
+    "en": "Spagettification"
+  },
+  {
+    "id": 183,
+    "en": "Spam Emails"
+  },
+  {
+    "id": 184,
+    "en": "Spider Robots"
+  },
+  {
+    "id": 185,
+    "en": "Spinning Spaceships"
+  },
+  {
+    "id": 186,
+    "en": "Statue"
+  },
+  {
+    "id": 187,
+    "en": "Sun Explodes"
+  },
+  {
+    "id": 188,
+    "en": "Super Hearing"
+  },
+  {
+    "id": 189,
+    "en": "Super Twitter"
+  },
+  {
+    "id": 190,
+    "en": "Superhumans"
+  },
+  {
+    "id": 191,
+    "en": "System Crash"
+  },
+  {
+    "id": 192,
+    "en": "Talking chocolate"
+  },
+  {
+    "id": 193,
+    "en": "Telepathic Food"
+  },
+  {
+    "id": 194,
+    "en": "Telepathy Hackers"
+  },
+  {
+    "id": 195,
+    "en": "Teleporting"
+  },
+  {
+    "id": 196,
+    "en": "Terraforming"
+  },
+  {
+    "id": 197,
+    "en": "The Edge of the Universe"
+  },
+  {
+    "id": 198,
+    "en": "The Void"
+  },
+  {
+    "id": 199,
+    "en": "Therapist AI"
+  },
+  {
+    "id": 200,
+    "en": "Time Dilation"
+  },
+  {
+    "id": 201,
+    "en": "Time Freeze"
+  },
+  {
+    "id": 202,
+    "en": "Time Glitch"
+  },
+  {
+    "id": 203,
+    "en": "Time Loop"
+  },
+  {
+    "id": 204,
+    "en": "Time Paradox"
+  },
+  {
+    "id": 205,
+    "en": "Time Travel"
+  },
+  {
+    "id": 206,
+    "en": "Toilet Suit"
+  },
+  {
+    "id": 207,
+    "en": "Tracking Devices"
+  },
+  {
+    "id": 208,
+    "en": "Triple Gravity"
+  },
+  {
+    "id": 209,
+    "en": "Truth Serum"
+  },
+  {
+    "id": 210,
+    "en": "Undead President"
+  },
+  {
+    "id": 211,
+    "en": "Underwater Breathing"
+  },
+  {
+    "id": 212,
+    "en": "Universal Translator"
+  },
+  {
+    "id": 213,
+    "en": "Universal Wifi"
+  },
+  {
+    "id": 214,
+    "en": "Universe Influencers"
+  },
+  {
+    "id": 215,
+    "en": "Upwards Elevator"
+  },
+  {
+    "id": 216,
+    "en": "Vanishing Star"
+  },
+  {
+    "id": 217,
+    "en": "Vending Machine"
+  },
+  {
+    "id": 218,
+    "en": "Virtual-Reality"
+  },
+  {
+    "id": 219,
+    "en": "Visual Echoes"
+  },
+  {
+    "id": 220,
+    "en": "Water Shortage"
+  },
+  {
+    "id": 221,
+    "en": "World War 3"
+  },
+  {
+    "id": 222,
+    "en": "Wormholes"
+  },
+  {
+    "id": 223,
+    "en": "X-ray Vision"
+  },
+  {
+    "id": 224,
+    "en": "Yoga"
+  },
+  {
+    "id": 225,
+    "en": "Zero G Football"
+  },
+  {
+    "id": 226,
+    "en": "Zero-Gravity Soup"
+  },
+  {
+    "id": 227,
+    "en": "AI Marriages"
+  }
+]

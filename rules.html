@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Future Problems — Rules</title>
-<link rel="icon" href="data:,">
+<link rel="icon" href="img/green_mav.gif" type="image/gif">
 <link rel="stylesheet" href="css/style.css">
 <style>
     html, body { overflow: hidden; height: 100vh; }
@@ -64,6 +64,8 @@
     .important-text { color: var(--Important); font-weight: bold; text-shadow: 0 0 5px var(--Important); display: inline-block; }
     .next-indicator { text-align: center; font-size: 14px; color: var(--Title); margin: 20px 0; animation: blink 0.7s infinite; }
     .language-selector { position: fixed; top: 30px; right: 14px; z-index: 101; }
+    .top-left-group { position: fixed; top: 24px; left: 14px; z-index: 101; display: flex; align-items: center; gap: 8px; }
+    .rules-mascot { height: 24px; width: auto; image-rendering: pixelated; }
     .language-selector select {
         font-family: 'VT323', monospace; background: var(--CardBackground); border: 1px solid var(--CardBorder);
         color: var(--BodyText); border-radius: 5px; padding: 2px 4px; cursor: pointer; font-size: 16px;
@@ -89,6 +91,11 @@
     <div class="progress-card" data-card="3"></div>
     <div class="progress-card" data-card="4"></div>
     <div class="progress-card" data-card="5"></div>
+</div>
+
+<div class="top-left-group">
+    <img src="img/green_mav.gif" class="rules-mascot" alt="Future Problems mascot">
+    <a class="ms-footer-link" href="https://www.medievalsolutions.com" target="_blank" rel="noopener">via Medieval Solutions ↗</a>
 </div>
 
 <div class="language-selector">

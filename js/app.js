@@ -71,6 +71,7 @@ document.getElementById('btn-start-game').addEventListener('click', () => {
     }
     const target = parseInt(document.getElementById('target-score').value, 10) || 3;
     newGame(names, target);
+    keepAwake();
     startRound();
 });
 
@@ -145,6 +146,7 @@ function renderCrisisDraw() {
 
 document.getElementById('btn-draw-trouble').addEventListener('click', () => {
     const id = drawTrouble(G);
+    sfx.trouble();
     const zone = document.getElementById('crisis-card-zone');
     zone.innerHTML = '';
     zone.appendChild(renderCardEl(CARDS_BY_ID[id], { big: true }));
@@ -162,8 +164,9 @@ document.getElementById('btn-crisis-ready').addEventListener('click', () => {
 
 function advanceSolveQueue() {
     if (solveOrder.length === 0) {
-        show('view-reveal');
-        renderReveal();
+        revealWalkOrder = Object.keys(G.proposals).map(Number);
+        revealWalkIdx = 0;
+        advanceRevealWalk();
         return;
     }
     const idx = solveOrder[0];
@@ -194,9 +197,11 @@ function renderSolveHand(playerIdx) {
             if (i >= 0) {
                 solveSelection.splice(i, 1);
                 el.classList.remove('selected');
+                sfx.drop();
             } else if (solveSelection.length < 2) {
                 solveSelection.push(cardId);
                 el.classList.add('selected');
+                sfx.pick();
             }
             document.getElementById('btn-lock-in').disabled = solveSelection.length !== 2;
         });
@@ -206,9 +211,58 @@ function renderSolveHand(playerIdx) {
 }
 
 document.getElementById('btn-lock-in').addEventListener('click', () => {
+    sfx.lockIn();
     const idx = solveOrder.shift();
     lockProposal(G, idx, solveSelection);
     advanceSolveQueue();
+});
+
+/* ---------- Flip reveal (one solver at a time, narrative pacing) ---------- */
+
+let revealWalkOrder = [];
+let revealWalkIdx = 0;
+let flipRevealFlipped = [];
+
+function advanceRevealWalk() {
+    if (revealWalkIdx >= revealWalkOrder.length) {
+        show('view-reveal');
+        renderReveal();
+        return;
+    }
+    const idx = revealWalkOrder[revealWalkIdx];
+    handoffTo(G.players[idx].name, 'SOLVER — reveal your solution when you\'re ready.', () => {
+        show('view-flip-reveal');
+        renderFlipReveal(idx);
+    });
+}
+
+function renderFlipReveal(idx) {
+    flipRevealFlipped = [];
+    document.getElementById('flip-player-name').textContent = G.players[idx].name;
+    const cardIds = G.proposals[idx];
+    const slots = document.getElementById('flip-reveal-slots');
+    slots.innerHTML = '';
+    [0, 1].forEach(slot => {
+        const el = document.createElement('div');
+        el.className = 'flip-slot';
+        el.textContent = '?';
+        el.addEventListener('click', () => {
+            if (flipRevealFlipped.includes(slot)) return;
+            flipRevealFlipped.push(slot);
+            sfx.flip();
+            el.className = 'flip-slot flipped';
+            el.innerHTML = '';
+            el.appendChild(renderCardEl(CARDS_BY_ID[cardIds[slot]]));
+            document.getElementById('btn-flip-done').disabled = flipRevealFlipped.length !== 2;
+        });
+        slots.appendChild(el);
+    });
+    document.getElementById('btn-flip-done').disabled = true;
+}
+
+document.getElementById('btn-flip-done').addEventListener('click', () => {
+    revealWalkIdx += 1;
+    advanceRevealWalk();
 });
 
 /* ---------- Reveal & Judge ---------- */
@@ -269,6 +323,9 @@ function renderJudge() {
 
 function selectWinner(winnerIdx) {
     const winner = awardRound(G, winnerIdx);
+    sfx.judge();
+    setTimeout(() => sfx.fanfare(), 150);
+    vibrate([80, 40, 80, 40, 200]);
     show('view-round-result');
     document.getElementById('result-winner-name').textContent = winner.name;
     renderScoreboard('result-scoreboard');
@@ -295,6 +352,7 @@ function renderScoreboard(elId) {
 
 function endGame() {
     G.gameOver = true;
+    allowSleep();
     const top = Math.max(...G.players.map(p => p.score));
     const winners = G.players.filter(p => p.score === top);
     document.getElementById('end-winner-name').textContent = winners.map(w => w.name).join(' & ');
@@ -310,6 +368,7 @@ document.getElementById('btn-play-again').addEventListener('click', () => {
 });
 
 document.getElementById('btn-new-game').addEventListener('click', () => {
+    allowSleep();
     show('view-title');
 });
 

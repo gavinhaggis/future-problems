@@ -6,9 +6,17 @@
 let myPeer = null;
 let hostConn = null;
 let myAlias = null;
+let myRoomCode = null;
 let myHand = [];      // [{id, en}]
 let isCrisis = false;
 let lastState = null; // last 'state' payload from host
+let hasJoinedOnce = false;
+let reconnecting = false;
+let lastTroubleSoundFor = null;
+let lastResultAnnouncedFor = null;
+let lastPresentingAlias = undefined;
+let lastFlipCount = 0;
+let myProposalReveal = null; // [{id, en}] — my own 2 proposal cards, sent privately when I claim the reveal floor
 
 const views = {};
 document.querySelectorAll('.view').forEach(v => { views[v.id] = v; });
@@ -23,12 +31,18 @@ function show(id) {
 (function prefillRoomCode() {
     const params = new URLSearchParams(window.location.search);
     const room = params.get('room');
-    if (room) document.getElementById('join-code').value = room.toUpperCase();
+    const cached = loadRoomCache();
+    if (room) {
+        document.getElementById('join-code').value = room.toUpperCase();
+    } else if (cached) {
+        document.getElementById('join-code').value = cached.room;
+        document.getElementById('join-alias').value = cached.alias;
+    }
 })();
 
-document.getElementById('btn-join-room').addEventListener('click', joinRoom);
+document.getElementById('btn-join-room').addEventListener('click', () => joinRoom(false));
 
-function joinRoom() {
+function joinRoom(isReconnect) {
     const code = document.getElementById('join-code').value.trim().toUpperCase();
     const alias = document.getElementById('join-alias').value.trim().slice(0, 18);
     const errEl = document.getElementById('join-error');
@@ -37,33 +51,71 @@ function joinRoom() {
     if (!alias) return (errEl.textContent = 'Enter an alias.');
 
     myAlias = alias;
+    myRoomCode = code;
     document.getElementById('btn-join-room').disabled = true;
     myPeer = connectToRoom(
         code,
         (p, conn) => {
             hostConn = conn;
             conn.on('data', onMessage);
-            conn.on('close', () => { errEl.textContent = 'Lost connection to host.'; });
+            conn.on('close', onHostDisconnect);
             send(hostConn, 'join', { alias });
         },
         (err) => {
+            if (isReconnect) return scheduleReconnect();
             errEl.textContent = 'Could not reach that room: ' + err.message;
             document.getElementById('btn-join-room').disabled = false;
         }
     );
 }
 
+function onHostDisconnect() {
+    if (!hasJoinedOnce) return;
+    scheduleReconnect();
+}
+
+function scheduleReconnect() {
+    if (reconnecting) return;
+    reconnecting = true;
+    showReconnectBanner(true);
+    setTimeout(() => {
+        if (myPeer) { try { myPeer.destroy(); } catch (e) { /* ignore */ } }
+        joinRoom(true);
+    }, 1500);
+}
+
+function showReconnectBanner(visible) {
+    let banner = document.getElementById('reconnect-banner');
+    if (!banner) {
+        banner = document.createElement('div');
+        banner.id = 'reconnect-banner';
+        banner.className = 'reconnect-banner';
+        banner.textContent = 'Reconnecting to the host...';
+        document.body.appendChild(banner);
+    }
+    banner.style.display = visible ? 'block' : 'none';
+}
+
 function onMessage(msg) {
     if (msg.type === 'error') {
+        if (reconnecting) return; // stale room state from a dead connection — ignore, keep retrying
         document.getElementById('join-error').textContent = msg.message;
         document.getElementById('btn-join-room').disabled = false;
         show('view-join');
     } else if (msg.type === 'joined') {
-        show('view-waiting');
+        hasJoinedOnce = true;
+        reconnecting = false;
+        showReconnectBanner(false);
+        saveRoomCache(myRoomCode, myAlias);
+        keepAwake();
+        if (!lastState) show('view-waiting');
+        else { show('view-game'); renderGame(); }
     } else if (msg.type === 'lobby') {
         renderWaitingList(msg.players);
     } else if (msg.type === 'role') {
+        const wasCrisis = isCrisis;
         isCrisis = !!msg.isCrisis;
+        if (isCrisis && !wasCrisis) vibrate([120, 60, 120]);
     } else if (msg.type === 'yourHand') {
         myHand = msg.cards;
     } else if (msg.type === 'state') {
@@ -72,7 +124,12 @@ function onMessage(msg) {
         renderGame();
     } else if (msg.type === 'gameOver') {
         lastState = msg.payload;
+        allowSleep();
         renderGuestEnd();
+    } else if (msg.type === 'nudged') {
+        showNudgeToast(msg.from);
+    } else if (msg.type === 'yourProposal') {
+        myProposalReveal = msg.cards;
     }
 }
 
@@ -122,18 +179,21 @@ function renderGame() {
         }
     } else if (s.phase === 'solving') {
         html += `<div id="game-trouble-zone" style="width:100%;display:flex;justify-content:center;"></div>`;
-        html += `<p class="dim">Locked in: ${s.lockedIn.length ? escapeHtml(s.lockedIn.join(', ')) : 'nobody yet'}</p>`;
         if (isCrisis) {
             html += `<p class="dim">Solvers are choosing on their own devices...</p>`;
+            html += `<div class="queue-list">` + s.scoreboard.filter(p => p.alias !== s.crisisAlias).map(p => {
+                const done = s.lockedIn.includes(p.alias);
+                const nudgeBtn = done ? '' : `<button class="queue-nudge" data-nudge="${escapeHtml(p.alias)}">\u{1F44B} nudge</button>`;
+                return `<div class="queue-row ${done ? 'status-done' : ''}"><span>${escapeHtml(p.alias)}</span><span class="queue-status">${done ? '✓ locked in' : 'thinking...'}${nudgeBtn}</span></div>`;
+            }).join('') + `</div>`;
         } else if (s.lockedIn.includes(myAlias)) {
             html += `<p>You're locked in. Waiting on the rest...</p>`;
         } else {
             html += `<p>Pick exactly two cards from your hand:</p><div class="hand-grid" id="game-hand-grid"></div><button id="btn-lock-in" disabled>&gt; LOCK IN</button>`;
         }
-    } else if (s.phase === 'reveal') {
+    } else if (s.phase === 'reveal-queue') {
         html += `<div id="game-trouble-zone" style="width:100%;display:flex;justify-content:center;"></div>`;
-        html += `<p class="dim">Solutions are in — argue your case aloud.</p>`;
-        html += `<div id="game-reveal-list" style="width:100%;"></div>`;
+        html += renderRevealQueueHtml(s, isCrisis);
     } else if (s.phase === 'judge') {
         html += `<div id="game-trouble-zone" style="width:100%;display:flex;justify-content:center;"></div>`;
         if (isCrisis) {
@@ -152,6 +212,16 @@ function renderGame() {
     const troubleZone = document.getElementById('game-trouble-zone');
     if (troubleZone && s.trouble) {
         troubleZone.appendChild(renderCardEl(s.trouble, { big: true }));
+        if (lastTroubleSoundFor !== s.trouble.id) { lastTroubleSoundFor = s.trouble.id; sfx.trouble(); }
+    }
+
+    if (s.phase === 'result') {
+        const resultKey = `${s.round}:${s.roundWinner}`;
+        if (lastResultAnnouncedFor !== resultKey) {
+            lastResultAnnouncedFor = resultKey;
+            sfx.fanfare();
+            if (s.roundWinner === myAlias) vibrate([80, 40, 80, 40, 200]);
+        }
     }
 
     if (s.phase === 'facility-setup' && isCrisis) {
@@ -184,24 +254,96 @@ function renderGame() {
             const cardEl = renderCardEl(card);
             cardEl.addEventListener('click', () => {
                 const i = selection.indexOf(card.id);
-                if (i >= 0) { selection.splice(i, 1); cardEl.classList.remove('selected'); }
-                else if (selection.length < 2) { selection.push(card.id); cardEl.classList.add('selected'); }
+                if (i >= 0) { selection.splice(i, 1); cardEl.classList.remove('selected'); sfx.drop(); }
+                else if (selection.length < 2) { selection.push(card.id); cardEl.classList.add('selected'); sfx.pick(); }
                 document.getElementById('btn-lock-in').disabled = selection.length !== 2;
             });
             grid.appendChild(cardEl);
         });
         document.getElementById('btn-lock-in').addEventListener('click', () => {
+            sfx.lockIn();
             send(hostConn, 'action', { action: 'propose', cardIds: selection });
         });
     }
 
-    if (s.phase === 'reveal') {
-        renderProposalList('game-reveal-list', s, null);
+    if (s.phase === 'solving' || s.phase === 'reveal-queue') {
+        document.querySelectorAll('.queue-nudge').forEach(btn => {
+            btn.addEventListener('click', () => send(hostConn, 'action', { action: 'nudge', targetAlias: btn.dataset.nudge }));
+        });
+    }
+
+    if (s.phase === 'reveal-queue') {
+        const rq = s.revealQueue;
+        if (rq.presentingAlias !== lastPresentingAlias) {
+            lastPresentingAlias = rq.presentingAlias;
+            lastFlipCount = 0;
+            if (rq.presentingAlias && rq.presentingAlias !== myAlias) { sfx.revealStart(); vibrate([10, 30, 10]); }
+        }
+        const flippedNow = rq.presentingSlots ? rq.presentingSlots.filter(s2 => s2.flipped).length : 0;
+        if (flippedNow > lastFlipCount && rq.presentingAlias !== myAlias) { sfx.flip(); vibrate(15); }
+        lastFlipCount = flippedNow;
+
+        const claimBtn = document.getElementById('rq-claim-btn');
+        if (claimBtn) claimBtn.addEventListener('click', () => send(hostConn, 'action', { action: 'claimReveal' }));
+        document.querySelectorAll('[data-flip-slot]').forEach(el2 => {
+            el2.addEventListener('click', () => {
+                sfx.flip();
+                send(hostConn, 'action', { action: 'flipCard', slot: parseInt(el2.dataset.flipSlot, 10) });
+            });
+        });
+        const doneBtn = document.getElementById('rq-done-btn');
+        if (doneBtn && !doneBtn.disabled) doneBtn.addEventListener('click', () => send(hostConn, 'action', { action: 'doneRevealing' }));
     }
 
     if (s.phase === 'judge') {
         renderProposalList('game-judge-list', s, isCrisis ? (alias) => send(hostConn, 'action', { action: 'judge', winnerAlias: alias }) : null);
     }
+}
+
+function renderRevealQueueHtml(s, isCrisis) {
+    const rq = s.revealQueue;
+    const entry = rq.entries.find(e => e.alias === myAlias);
+    const amPresenting = rq.presentingAlias === myAlias;
+    const haveRevealed = entry && entry.status === 'done';
+
+    const queueHtml = `<div class="queue-list">` + rq.entries.map(e => {
+        const statusLabel = e.status === 'done' ? '✓ presented' : e.status === 'presenting' ? '\u{1F5E3}️ presenting...' : 'waiting';
+        const nudgeBtn = (isCrisis && e.status === 'waiting') ? `<button class="queue-nudge" data-nudge="${escapeHtml(e.alias)}">\u{1F44B} nudge</button>` : '';
+        const revealedCards = e.status === 'done'
+            ? `<div class="cards">${e.cards.map(c => renderCardEl(c).outerHTML).join('')}</div>` : '';
+        return `<div class="queue-row status-${e.status}"><div class="queue-row-top"><span>${escapeHtml(e.alias)}</span><span class="queue-status">${statusLabel}${nudgeBtn}</span></div>${revealedCards}</div>`;
+    }).join('') + `</div>`;
+
+    if (isCrisis) {
+        return `<p class="dim">Watching the reveal...</p>${flipMirrorHtml(rq)}${queueHtml}`;
+    }
+    if (amPresenting && myProposalReveal) {
+        const flipped = rq.presentingSlots ? rq.presentingSlots.filter(s => s.flipped).length : 0;
+        const slotsHtml = myProposalReveal.map((card, slot) => {
+            const cardHtml = renderCardEl(card).outerHTML;
+            const isFlipped = rq.presentingSlots && rq.presentingSlots[slot].flipped;
+            return isFlipped
+                ? `<div class="flip-slot flipped">${cardHtml}</div>`
+                : `<div class="flip-slot mine" data-flip-slot="${slot}">${cardHtml}</div>`;
+        }).join('');
+        return `<p>Your turn — you can see your own cards below. Tap one to reveal it to the table, narrate as you go.</p><div class="flip-slots">${slotsHtml}</div><button id="rq-done-btn" ${flipped === 2 ? '' : 'disabled'}>&gt; DONE PRESENTING</button>${queueHtml}`;
+    }
+    if (haveRevealed) {
+        return `<p>You've presented.</p>${flipMirrorHtml(rq)}${queueHtml}`;
+    }
+    if (rq.presentingAlias === null) {
+        return `<button id="rq-claim-btn">&gt; I'LL GO</button>${queueHtml}`;
+    }
+    return `${flipMirrorHtml(rq)}${queueHtml}`;
+}
+
+function flipMirrorHtml(rq) {
+    if (!rq.presentingAlias) return '';
+    const slotsHtml = rq.presentingSlots.map(s => s.flipped
+        ? `<div class="flip-slot flipped">${renderCardEl(s.card).outerHTML}</div>`
+        : `<div class="flip-slot">?</div>`
+    ).join('');
+    return `<p class="dim">${escapeHtml(rq.presentingAlias)} is presenting:</p><div class="flip-slots">${slotsHtml}</div>`;
 }
 
 function renderProposalList(elId, s, onPick) {

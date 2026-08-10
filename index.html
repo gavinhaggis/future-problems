@@ -4,13 +4,18 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Future Problems</title>
-<link rel="icon" href="data:,">
+<link rel="icon" href="img/green_mav.gif" type="image/gif">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 <div class="top-bar">
-    <a href="rules.html">RULES</a>
-    <a href="https://github.com/gavinhaggis/future-problems" target="_blank" rel="noopener">GITHUB</a>
+    <div class="top-bar-left">
+        <img src="img/green_mav.gif" class="mascot" alt="Future Problems mascot">
+        <a href="rules.html">RULES</a>
+    </div>
+    <div class="top-bar-right">
+        <a href="https://github.com/gavinhaggis/future-problems" target="_blank" rel="noopener">GITHUB</a>
+    </div>
 </div>
 
 <div id="app">
@@ -25,6 +30,14 @@
         </div>
         <button id="btn-new-session" class="ghost" style="margin-top:18px;">&gt; PASS &amp; PLAY (ONE DEVICE, OFFLINE)</button>
         <div class="footer-nav"><a href="rules.html" style="color:var(--BodyText)">How to play &rarr;</a></div>
+
+        <div class="ms-credit">
+            <p class="dim">A free, open-source spin-off of the physical party game</p>
+            <a href="https://www.medievalsolutions.com" target="_blank" rel="noopener" aria-label="Medieval Solutions website">
+                <img src="img/medieval-solutions-logo.png" alt="Medieval Solutions" class="ms-logo">
+            </a>
+            <p class="dim">Same engine, same dead-serious delivery — swapped from tavern intrigue for retro-future crisis.</p>
+        </div>
     </section>
 
     <!-- SETUP -->
@@ -87,6 +100,14 @@
         <button id="btn-lock-in" disabled>&gt; LOCK IN</button>
     </section>
 
+    <!-- FLIP REVEAL (one solver at a time) -->
+    <section class="view" id="view-flip-reveal">
+        <h2><span id="flip-player-name"></span>'S TURN TO REVEAL</h2>
+        <p class="dim">Tap each card to reveal it, and narrate as you go.</p>
+        <div class="flip-slots" id="flip-reveal-slots"></div>
+        <button id="btn-flip-done" disabled>&gt; DONE — PASS THE DEVICE</button>
+    </section>
+
     <!-- REVEAL -->
     <section class="view" id="view-reveal">
         <h2>ALL SOLUTIONS IN</h2>
@@ -123,6 +144,7 @@
 </div>
 
 <script src="js/game-core.js"></script>
+<script src="js/polish.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>

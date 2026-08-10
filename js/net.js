@@ -22,6 +22,12 @@ function roomLink(code) {
     return url.toString();
 }
 
+function tvLink(code) {
+    const url = new URL('tv.html', window.location.href);
+    url.searchParams.set('room', code);
+    return url.toString();
+}
+
 /** Host side: opens a Peer whose id encodes the room code. Retries with a new code on collision. */
 function createHostPeer(onOpen, onError, attempt = 0) {
     const code = generateRoomCode();

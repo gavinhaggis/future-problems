@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Future Problems — TV Display</title>
+<link rel="icon" href="img/green_mav.gif" type="image/gif">
+<link rel="stylesheet" href="css/style.css">
+<style>
+    /* Fluid, viewport-relative scale — reads well from a 13" laptop up to a
+       living-room TV, without assuming a fixed 1920x1080 canvas. */
+    #app { padding: clamp(10px, 2vh, 28px) clamp(12px, 3vw, 40px) clamp(16px, 3vh, 30px); }
+    .view { max-width: min(1500px, 94vw); }
+    h1 { font-size: clamp(30px, 5.2vw, 68px); }
+    h2 { font-size: clamp(20px, 3.2vw, 42px); }
+    p, label { font-size: clamp(14px, 1.6vw, 20px); }
+    .tv-round { text-align: center; font-size: clamp(15px, 1.8vw, 24px); opacity: 0.85; margin-bottom: 6px; letter-spacing: 1px; }
+    .facility-strip { font-size: clamp(12px, 1.4vw, 19px); }
+    .scoreboard { max-width: 900px; margin-left: auto; margin-right: auto; }
+    .scoreboard .score-row { font-size: clamp(17px, 2.4vw, 32px); padding: clamp(6px, 1vh, 12px) clamp(10px, 1.5vw, 18px); }
+    .big-card { max-width: min(560px, 60vw); }
+    .big-card .card-name { font-size: clamp(26px, 4.6vw, 62px); }
+    .queue-list { max-width: 900px; margin-left: auto; margin-right: auto; }
+    .queue-row { font-size: clamp(15px, 1.9vw, 24px); }
+    .queue-row .card-name { font-size: clamp(12px, 1.4vw, 18px); }
+    .flip-slots { max-width: 900px; margin-left: auto; margin-right: auto; }
+    .flip-slot { width: clamp(110px, 13vw, 170px); min-height: clamp(80px, 10vh, 120px); font-size: clamp(26px, 3.2vw, 44px); }
+    .status-text { text-align: center; font-size: clamp(18px, 2.6vw, 30px); color: var(--Title); margin: 10px 0; }
+    @media (max-height: 720px) {
+        h1 { font-size: clamp(26px, 4.6vw, 48px); }
+        .scoreboard .score-row { padding: 4px 12px; }
+    }
+</style>
+</head>
+<body>
+<div class="top-bar">
+    <div class="top-bar-left">
+        <img src="img/green_mav.gif" class="mascot" alt="Future Problems mascot">
+        <a href="rules.html">RULES</a>
+        <a class="ms-footer-link" href="https://www.medievalsolutions.com" target="_blank" rel="noopener">via Medieval Solutions ↗</a>
+    </div>
+    <div class="top-bar-right">
+        <a href="https://github.com/gavinhaggis/future-problems" target="_blank" rel="noopener">GITHUB</a>
+    </div>
+</div>
+
+<div id="app">
+
+    <section class="view" id="view-tv-join">
+        <h1>TV DISPLAY</h1>
+        <p class="dim">Read-only scoreboard for a laptop, TV, or projector. Doesn't join as a player.</p>
+        <div style="width:100%;max-width:320px;">
+            <label for="tv-code">Room code</label>
+            <input type="text" id="tv-code" maxlength="4" style="text-transform:uppercase;letter-spacing:4px;font-size:28px;text-align:center;" placeholder="ZQXK">
+        </div>
+        <button id="btn-tv-connect" style="margin-top:16px;">&gt; CONNECT</button>
+        <p id="tv-error" class="dim" style="color:var(--Danger);"></p>
+    </section>
+
+    <section class="view" id="view-tv-display">
+        <div id="tv-content" style="width:100%;"></div>
+    </section>
+
+</div>
+
+<script src="js/vendor/peerjs.min.js"></script>
+<script src="js/game-core.js"></script>
+<script src="js/net.js"></script>
+<script src="js/polish.js"></script>
+<script src="js/tv.js"></script>
+</body>
+</html>

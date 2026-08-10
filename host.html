@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Future Problems — Host</title>
-<link rel="icon" href="data:,">
+<link rel="icon" href="img/green_mav.gif" type="image/gif">
 <link rel="stylesheet" href="css/style.css">
 <style>
     .room-code { font-size: 64px; letter-spacing: 10px; color: var(--Important); text-shadow: 0 0 16px var(--Important); text-align: center; margin: 10px 0; }
@@ -20,8 +20,14 @@
 </head>
 <body>
 <div class="top-bar">
-    <a href="rules.html">RULES</a>
-    <a href="https://github.com/gavinhaggis/future-problems" target="_blank" rel="noopener">GITHUB</a>
+    <div class="top-bar-left">
+        <img src="img/green_mav.gif" class="mascot" alt="Future Problems mascot">
+        <a href="rules.html">RULES</a>
+        <a class="ms-footer-link" href="https://www.medievalsolutions.com" target="_blank" rel="noopener">via Medieval Solutions ↗</a>
+    </div>
+    <div class="top-bar-right">
+        <a href="https://github.com/gavinhaggis/future-problems" target="_blank" rel="noopener">GITHUB</a>
+    </div>
 </div>
 
 <div id="app">
@@ -45,6 +51,7 @@
         <div class="room-qr" id="lobby-qr"></div>
         <div class="room-link" id="lobby-link"></div>
         <p class="dim" style="text-align:center;margin-top:-8px;">Scan to join, or type the code at the link above.</p>
+        <a class="btn ghost" id="lobby-tv-link" href="#" target="_blank" rel="noopener" style="margin:6px auto 0;">&gt; OPEN TV DISPLAY (TV / LAPTOP SCOREBOARD)</a>
         <div class="lobby-list" id="lobby-list"></div>
         <p class="dim" id="lobby-count"></p>
         <button id="btn-start-game" disabled>&gt; START GAME</button>
@@ -68,6 +75,7 @@
 <script src="js/vendor/qrcode.min.js"></script>
 <script src="js/game-core.js"></script>
 <script src="js/net.js"></script>
+<script src="js/polish.js"></script>
 <script src="js/host.js"></script>
 </body>
 </html>

@@ -1,91 +1,16 @@
 'use strict';
 
-/* ---------- Card visual system (deterministic per-card color + animation) ---------- */
+/* Card data, shuffling, deal, scoring, cardVisual(), and renderCardEl() all
+   live in game-core.js (loaded before this file) so the pass-and-play and
+   networked modes share one implementation. */
 
-const ACCENTS = ['accent-0','accent-1','accent-2','accent-3','accent-4','accent-5','accent-6','accent-7'];
-const ANIMS = ['anim-glitch', 'anim-flicker', 'anim-scan', 'anim-pulse', '', '']; // '' = calm, weighted more likely
-
-function hashStr(s) {
-    let h = 0;
-    for (let i = 0; i < s.length; i++) {
-        h = (h * 31 + s.charCodeAt(i)) | 0;
-    }
-    return Math.abs(h);
-}
-
-function cardVisual(card) {
-    const h = hashStr(card.en);
-    const accent = ACCENTS[h % ACCENTS.length];
-    const anim = ANIMS[(h >> 4) % ANIMS.length];
-    return { accent, anim };
-}
-
-function renderCardEl(card, { big = false, selected = false } = {}) {
-    const { accent, anim } = cardVisual(card);
-    const el = document.createElement('div');
-    el.className = 'card' + (big ? ' big-card' : '') + (selected ? ' selected' : '');
-    el.style.setProperty('--card-accent', `var(--${accent})`);
-    el.dataset.cardId = card.id;
-    const nameEl = document.createElement('div');
-    nameEl.className = 'card-name' + (anim ? ' ' + anim : '');
-    nameEl.textContent = card.en.toUpperCase();
-    el.appendChild(nameEl);
-    return el;
-}
-
-/* ---------- Deck / card data ---------- */
-
-let CARDS = [];
-let CARDS_BY_ID = {};
-
-async function loadCards() {
-    const res = await fetch('data/cards.json');
-    CARDS = await res.json();
-    CARDS_BY_ID = Object.fromEntries(CARDS.map(c => [c.id, c]));
-}
-
-function shuffled(arr) {
-    const a = arr.slice();
-    for (let i = a.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [a[i], a[j]] = [a[j], a[i]];
-    }
-    return a;
-}
-
-/* ---------- Game state ---------- */
-
-const HAND_SIZE = 6;
+/* ---------- Game state (pass-and-play uses createGameState() from game-core.js) ---------- */
 
 let G = null; // active game state
+let solveOrder = []; // indices still needing to lock in, this round (pass-and-play only; sequential by device)
 
 function newGame(playerNames, targetScore) {
-    const deck = shuffled(CARDS.map(c => c.id));
-    const players = playerNames.map(name => ({ name, score: 0, hand: [], trophies: [] }));
-    for (const p of players) {
-        p.hand = deck.splice(0, HAND_SIZE);
-    }
-    G = {
-        players,
-        drawPile: deck,
-        crisisIndex: 0,
-        round: 1,
-        targetScore,
-        currentTrouble: null,
-        proposals: {},      // playerIndex -> [cardId, cardId]
-        solveOrder: [],     // indices still needing to lock in, this round
-        gameOver: false,
-        winner: null,
-    };
-}
-
-function nonCrisisIndices() {
-    return G.players.map((_, i) => i).filter(i => i !== G.crisisIndex);
-}
-
-function enoughCardsForRound() {
-    // crisis needs 1, and each solver who is short of 6 will need to redraw next time
-    return G.drawPile.length >= 1;
+    G = createGameState(playerNames, targetScore);
 }
 
 /* ---------- View plumbing ---------- */
@@ -152,16 +77,50 @@ document.getElementById('btn-start-game').addEventListener('click', () => {
 /* ---------- Round flow ---------- */
 
 function startRound() {
-    G.currentTrouble = null;
-    G.proposals = {};
-    if (!enoughCardsForRound() || G.players.some(p => p.score >= G.targetScore)) {
+    if (isGameOver(G)) {
         return endGame();
+    }
+    if (G.round === 1 && !G.facility) {
+        handoffTo(G.players[G.crisisIndex].name, 'CRISIS — frame the world before the first crisis.', () => {
+            show('view-facility-setup');
+            renderFacilitySetup();
+        });
+        return;
     }
     handoffTo(G.players[G.crisisIndex].name, 'CRISIS — pick up the device and draw the problem.', () => {
         show('view-crisis-draw');
         renderCrisisDraw();
     });
 }
+
+function renderFacilitySetup() {
+    document.getElementById('facility-crisis-name').textContent = G.players[G.crisisIndex].name;
+    ['facility-name', 'facility-mission', 'facility-monitors'].forEach(id => { document.getElementById(id).value = ''; });
+    document.getElementById('btn-facility-submit').disabled = true;
+}
+
+function facilityFieldsFilled() {
+    return ['facility-name', 'facility-mission', 'facility-monitors'].every(id => document.getElementById(id).value.trim());
+}
+
+['facility-name', 'facility-mission', 'facility-monitors'].forEach(id => {
+    document.getElementById(id).addEventListener('input', () => {
+        document.getElementById('btn-facility-submit').disabled = !facilityFieldsFilled();
+    });
+});
+
+document.getElementById('btn-facility-submit').addEventListener('click', () => {
+    setFacility(
+        G,
+        document.getElementById('facility-name').value,
+        document.getElementById('facility-mission').value,
+        document.getElementById('facility-monitors').value
+    );
+    handoffTo(G.players[G.crisisIndex].name, 'CRISIS — pick up the device and draw the problem.', () => {
+        show('view-crisis-draw');
+        renderCrisisDraw();
+    });
+});
 
 function handoffTo(name, subtitle, onContinue) {
     document.getElementById('handoff-name').textContent = name;
@@ -174,6 +133,7 @@ function handoffTo(name, subtitle, onContinue) {
 }
 
 function renderCrisisDraw() {
+    document.getElementById('crisis-facility-strip').innerHTML = facilityStripHtml(G.facility);
     document.getElementById('crisis-name').textContent = G.players[G.crisisIndex].name;
     document.getElementById('crisis-round-num').textContent = G.round;
     document.getElementById('crisis-pile-count').textContent = G.drawPile.length;
@@ -184,8 +144,7 @@ function renderCrisisDraw() {
 }
 
 document.getElementById('btn-draw-trouble').addEventListener('click', () => {
-    const id = G.drawPile.shift();
-    G.currentTrouble = id;
+    const id = drawTrouble(G);
     const zone = document.getElementById('crisis-card-zone');
     zone.innerHTML = '';
     zone.appendChild(renderCardEl(CARDS_BY_ID[id], { big: true }));
@@ -195,19 +154,19 @@ document.getElementById('btn-draw-trouble').addEventListener('click', () => {
 });
 
 document.getElementById('btn-crisis-ready').addEventListener('click', () => {
-    G.solveOrder = nonCrisisIndices();
+    solveOrder = nonCrisisIndices(G);
     advanceSolveQueue();
 });
 
 /* ---------- Solve phase ---------- */
 
 function advanceSolveQueue() {
-    if (G.solveOrder.length === 0) {
+    if (solveOrder.length === 0) {
         show('view-reveal');
         renderReveal();
         return;
     }
-    const idx = G.solveOrder[0];
+    const idx = solveOrder[0];
     const player = G.players[idx];
     handoffTo(player.name, 'SOLVER — pick two cards to solve the crisis.', () => {
         show('view-solve');
@@ -220,6 +179,7 @@ let solveSelection = [];
 function renderSolveHand(playerIdx) {
     solveSelection = [];
     const player = G.players[playerIdx];
+    document.getElementById('solve-facility-strip').innerHTML = facilityStripHtml(G.facility);
     document.getElementById('solve-player-name').textContent = player.name;
     const zone = document.getElementById('solve-trouble-zone');
     zone.innerHTML = '';
@@ -246,10 +206,8 @@ function renderSolveHand(playerIdx) {
 }
 
 document.getElementById('btn-lock-in').addEventListener('click', () => {
-    const idx = G.solveOrder.shift();
-    const player = G.players[idx];
-    G.proposals[idx] = solveSelection.slice();
-    player.hand = player.hand.filter(c => !solveSelection.includes(c));
+    const idx = solveOrder.shift();
+    lockProposal(G, idx, solveSelection);
     advanceSolveQueue();
 });
 
@@ -304,31 +262,20 @@ function renderJudge() {
         cardsWrap.className = 'cards';
         cardIds.forEach(cid => cardsWrap.appendChild(renderCardEl(CARDS_BY_ID[cid])));
         row.appendChild(cardsWrap);
-        row.addEventListener('click', () => awardRound(idx));
+        row.addEventListener('click', () => selectWinner(idx));
         list.appendChild(row);
     });
 }
 
-function awardRound(winnerIdx) {
-    const winner = G.players[winnerIdx];
-    winner.score += 1;
-    winner.trophies.push(G.currentTrouble);
+function selectWinner(winnerIdx) {
+    const winner = awardRound(G, winnerIdx);
     show('view-round-result');
     document.getElementById('result-winner-name').textContent = winner.name;
     renderScoreboard('result-scoreboard');
 }
 
 document.getElementById('btn-next-round').addEventListener('click', () => {
-    // replenish hands for everyone who submitted
-    Object.keys(G.proposals).forEach(idxStr => {
-        const idx = parseInt(idxStr, 10);
-        const player = G.players[idx];
-        while (player.hand.length < HAND_SIZE && G.drawPile.length > 0) {
-            player.hand.push(G.drawPile.shift());
-        }
-    });
-    G.crisisIndex = (G.crisisIndex + 1) % G.players.length;
-    G.round += 1;
+    replenishAndRotate(G);
     startRound();
 });
 
@@ -344,10 +291,6 @@ function renderScoreboard(elId) {
         row.innerHTML = `<span class="name">${escapeHtml(p.name)}</span><span class="pts">${p.score} pt${p.score === 1 ? '' : 's'} <span class="trophy">(${p.trophies.length} 🏆)</span></span>`;
         el.appendChild(row);
     });
-}
-
-function escapeHtml(s) {
-    return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
 
 function endGame() {

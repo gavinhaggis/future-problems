@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Future Problems — Join</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="css/style.css">
+<style>
+    .status-line { text-align: center; font-size: 18px; opacity: 0.8; margin: 6px 0 14px; }
+    .lobby-list { width: 100%; margin: 14px 0; }
+    .lobby-row { display: flex; align-items: center; padding: 6px 10px; border-bottom: 1px solid rgba(0,255,65,0.15); font-size: 20px; }
+    .conn-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: var(--CardBorder); box-shadow: 0 0 6px var(--CardBorder); margin-right: 8px; }
+</style>
+</head>
+<body>
+<div class="top-bar">
+    <a href="rules.html">RULES</a>
+    <a href="https://github.com/gavinhaggis/future-problems" target="_blank" rel="noopener">GITHUB</a>
+</div>
+
+<div id="app">
+
+    <section class="view" id="view-join">
+        <h1>JOIN A GAME</h1>
+        <div style="width:100%;max-width:320px;">
+            <label for="join-code">Room code</label>
+            <input type="text" id="join-code" maxlength="4" style="text-transform:uppercase;letter-spacing:4px;font-size:28px;text-align:center;" placeholder="ZQXK">
+            <label for="join-alias" style="margin-top:10px;display:block;">Your alias</label>
+            <input type="text" id="join-alias" maxlength="18" placeholder="Deckard">
+        </div>
+        <button id="btn-join-room" style="margin-top:16px;">&gt; JOIN</button>
+        <p id="join-error" class="dim" style="color:var(--Danger);"></p>
+    </section>
+
+    <section class="view" id="view-waiting">
+        <h2>WAITING FOR HOST TO START</h2>
+        <div class="lobby-list" id="waiting-list"></div>
+    </section>
+
+    <section class="view" id="view-game">
+        <div id="game-content" style="width:100%;"></div>
+    </section>
+
+    <section class="view" id="view-guest-end">
+        <h1>GAME OVER</h1>
+        <h2><span id="guest-end-winner-name"></span></h2>
+        <div class="scoreboard" id="guest-end-scoreboard"></div>
+        <a class="btn" href="play.html" style="margin-top:16px;">&gt; JOIN ANOTHER ROOM</a>
+    </section>
+
+</div>
+
+<script src="js/vendor/peerjs.min.js"></script>
+<script src="js/game-core.js"></script>
+<script src="js/net.js"></script>
+<script src="js/guest.js"></script>
+</body>
+</html>

@@ -10,7 +10,7 @@
 <body>
 <div class="top-bar">
     <a href="rules.html">RULES</a>
-    <a href="https://github.com/" target="_blank" rel="noopener">GITHUB</a>
+    <a href="https://github.com/gavinhaggis/future-problems" target="_blank" rel="noopener">GITHUB</a>
 </div>
 
 <div id="app">
@@ -19,7 +19,11 @@
     <section class="view" id="view-title">
         <h1 class="blink">FUTURE&nbsp;PROBLEMS</h1>
         <p class="dim">A free, open-source party game of impossible tomorrows.</p>
-        <button id="btn-new-session">&gt; NEW SESSION</button>
+        <div style="margin-top:10px;">
+            <a class="btn" href="host.html">&gt; HOST A GAME</a>
+            <a class="btn" href="play.html">&gt; JOIN A GAME</a>
+        </div>
+        <button id="btn-new-session" class="ghost" style="margin-top:18px;">&gt; PASS &amp; PLAY (ONE DEVICE, OFFLINE)</button>
         <div class="footer-nav"><a href="rules.html" style="color:var(--BodyText)">How to play &rarr;</a></div>
     </section>
 
@@ -46,9 +50,25 @@
         </div>
     </section>
 
+    <!-- FACILITY SETUP (round 1 only) -->
+    <section class="view" id="view-facility-setup">
+        <h2>FACILITY SETUP</h2>
+        <p><span id="facility-crisis-name"></span>, frame the world before the first crisis.</p>
+        <div class="facility-form">
+            <label for="facility-name">Facility name</label>
+            <input type="text" id="facility-name" maxlength="40" placeholder="Helix Orbital Station">
+            <label for="facility-mission">Its mission</label>
+            <input type="text" id="facility-mission" maxlength="60" placeholder="Terraforming the outer colonies">
+            <label for="facility-monitors">What you all monitor</label>
+            <input type="text" id="facility-monitors" maxlength="60" placeholder="Atmospheric integrity">
+        </div>
+        <button id="btn-facility-submit" style="margin-top:16px;" disabled>&gt; BEGIN</button>
+    </section>
+
     <!-- CRISIS DRAW -->
     <section class="view" id="view-crisis-draw">
         <h2>ROUND <span id="crisis-round-num"></span> — CRISIS</h2>
+        <div id="crisis-facility-strip"></div>
         <p><span id="crisis-name"></span>, draw the problem card and narrate it.</p>
         <p class="dim"><span id="crisis-pile-count"></span> cards remain in the scenario pile</p>
         <div id="crisis-card-zone" style="width:100%;display:flex;justify-content:center;"></div>
@@ -59,6 +79,7 @@
     <!-- SOLVE -->
     <section class="view" id="view-solve">
         <h2><span id="solve-player-name"></span> — SOLVE</h2>
+        <div id="solve-facility-strip"></div>
         <p class="dim">The crisis:</p>
         <div id="solve-trouble-zone" style="width:100%;display:flex;justify-content:center;"></div>
         <p class="dim" style="margin-top:14px;">Pick exactly two cards from your hand as your solution:</p>
@@ -101,6 +122,7 @@
 
 </div>
 
+<script src="js/game-core.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>

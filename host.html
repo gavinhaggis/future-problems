@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Future Problems — Host</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="css/style.css">
+<style>
+    .room-code { font-size: 64px; letter-spacing: 10px; color: var(--Important); text-shadow: 0 0 16px var(--Important); text-align: center; margin: 10px 0; }
+    .room-link { font-size: 16px; word-break: break-all; text-align: center; opacity: 0.75; margin-bottom: 16px; }
+    .room-qr { display: flex; justify-content: center; margin: 10px 0 16px; }
+    .room-qr img { border-radius: 8px; border: 2px solid var(--CardBorder); box-shadow: 0 0 16px rgba(0,255,65,0.3); background: #fff; padding: 8px; }
+    .keep-open-warning { font-size: 14px; color: var(--Danger); text-align: center; margin-top: 10px; opacity: 0.85; }
+    .lobby-list { width: 100%; margin: 14px 0; }
+    .lobby-row { display: flex; justify-content: space-between; padding: 6px 10px; border-bottom: 1px solid rgba(0,255,65,0.15); font-size: 20px; }
+    .conn-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: var(--CardBorder); box-shadow: 0 0 6px var(--CardBorder); margin-right: 8px; }
+    .status-line { text-align: center; font-size: 18px; opacity: 0.8; margin: 6px 0 14px; }
+</style>
+</head>
+<body>
+<div class="top-bar">
+    <a href="rules.html">RULES</a>
+    <a href="https://github.com/gavinhaggis/future-problems" target="_blank" rel="noopener">GITHUB</a>
+</div>
+
+<div id="app">
+
+    <section class="view" id="view-host-setup">
+        <h1>HOST A GAME</h1>
+        <p class="dim">You'll get a room code everyone else joins from their own phone.</p>
+        <div style="width:100%;max-width:320px;">
+            <label for="host-alias">Your alias</label>
+            <input type="text" id="host-alias" maxlength="18" placeholder="Ripley">
+            <label for="host-target-score" style="margin-top:10px;display:block;">Target score</label>
+            <input type="number" id="host-target-score" value="3" min="1" max="20">
+        </div>
+        <button id="btn-create-room" style="margin-top:16px;">&gt; CREATE ROOM</button>
+        <p id="host-setup-error" class="dim" style="color:var(--Danger);"></p>
+    </section>
+
+    <section class="view" id="view-lobby">
+        <h2>ROOM CODE</h2>
+        <div class="room-code" id="lobby-code"></div>
+        <div class="room-qr" id="lobby-qr"></div>
+        <div class="room-link" id="lobby-link"></div>
+        <p class="dim" style="text-align:center;margin-top:-8px;">Scan to join, or type the code at the link above.</p>
+        <div class="lobby-list" id="lobby-list"></div>
+        <p class="dim" id="lobby-count"></p>
+        <button id="btn-start-game" disabled>&gt; START GAME</button>
+        <p class="keep-open-warning">Keep this tab open — it's holding the game.</p>
+    </section>
+
+    <section class="view" id="view-table">
+        <div id="table-content" style="width:100%;"></div>
+    </section>
+
+    <section class="view" id="view-host-end">
+        <h1>GAME OVER</h1>
+        <h2><span id="host-end-winner-name"></span></h2>
+        <div class="scoreboard" id="host-end-scoreboard"></div>
+        <button id="btn-host-new-room">&gt; NEW ROOM</button>
+    </section>
+
+</div>
+
+<script src="js/vendor/peerjs.min.js"></script>
+<script src="js/vendor/qrcode.min.js"></script>
+<script src="js/game-core.js"></script>
+<script src="js/net.js"></script>
+<script src="js/host.js"></script>
+</body>
+</html>

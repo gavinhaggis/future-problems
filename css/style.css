@@ -212,6 +212,21 @@ input:focus { outline: none; box-shadow: 0 0 10px var(--Important); }
 .score-row.leader .name { color: var(--Title); text-shadow: 0 0 8px var(--Title); }
 .trophy { font-size: 14px; opacity: 0.7; }
 
+.facility-strip {
+    width: 100%;
+    font-size: 15px;
+    color: var(--Title);
+    opacity: 0.85;
+    text-align: center;
+    padding: 6px 10px;
+    margin-bottom: 10px;
+    border: 1px solid rgba(0,255,65,0.25);
+    border-radius: 6px;
+    background: rgba(0,255,65,0.04);
+}
+.facility-form { width: 100%; max-width: 420px; text-align: left; }
+.facility-form label { display: block; margin-top: 10px; font-size: 18px; }
+
 .top-bar { position: fixed; top: 10px; left: 14px; right: 14px; display: flex; justify-content: space-between; font-size: 14px; opacity: 0.6; z-index: 50; }
 .top-bar a { color: var(--BodyText); text-decoration: none; }
 .top-bar a:hover { color: var(--Important); }

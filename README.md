@@ -1,16 +1,14 @@
 # Future Problems
 
-A free, open-source party game of impossible tomorrows — retro-terminal sci-fi cousin of *Medieval Solutions*.
+An open-source party game of impossible tomorrows - retro-terminal sci-fi cousin of *Medieval Solutions*.
 
-Round 1's Crisis opens by framing the facility everyone works in — its name, its mission, what it monitors — which stays visible for the rest of the session. Then the loop begins: the Crisis draws a card from the scenario pile and narrates why it's a critical problem of the future. Everyone else is a **Solver** — each secretly picks two cards from their hand as an absurd, dead-serious solution. Best pitch wins the point (and the trophy card). Roles rotate. First to the target score wins.
+Round 1's Crisis opens by framing the facility everyone works in - its name, its mission, what it monitors - which stays visible for the rest of the session. Then the loop begins: the Crisis draws a card from the scenario pile and narrates why it's a critical problem of the future. Everyone else is a **Solver** — each secretly picks two cards from their hand as an absurd, dead-serious solution. Best pitch wins the point (and the trophy card). Roles rotate. First to the target score wins.
 
 No art, no accounts, no server. Open `index.html` and play — pass the device around the table.
 
 **[▶ Play](index.html)** · **[How to play](rules.html)**
 
 ---
-
-## Version 2 — one link, real multiplayer
 
 Host a room from one device, share a 4-letter code (or link), everyone else joins from their own phone with an alias. No accounts, no database, no server to run or pay for — the host's device holds the game state and talks directly to each guest over WebRTC (via [PeerJS](https://peerjs.com), using its free public broker only to negotiate the connection). Since hands are private per device, solvers pick their two cards simultaneously instead of taking turns — faster than pass-and-play.
 
@@ -80,4 +78,4 @@ future-problems/
 
 ## Credits
 
-Rules and card list adapted from *[Medieval Solutions](https://www.medievalsolutions.com)* by Gavin Hanigan. Contributions welcome.
+Rules and mechanics adapted from *[Medieval Solutions](https://www.medievalsolutions.com)* by Gavin Hanigan. Cards by Atte Liikanen. Contributions welcome!

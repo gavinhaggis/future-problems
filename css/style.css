@@ -79,6 +79,7 @@ p, label { font-size: 20px; line-height: 1.5; }
 
 /* Buttons */
 button, .btn {
+    display: inline-block;
     font-family: 'VT323', monospace;
     background: var(--ButtonBackground);
     color: var(--ButtonText);
@@ -87,6 +88,7 @@ button, .btn {
     padding: 10px 22px;
     font-size: 22px;
     cursor: pointer;
+    text-align: center;
     transition: all 0.2s ease;
     margin: 6px;
 }
@@ -301,11 +303,20 @@ input:focus { outline: none; box-shadow: 0 0 10px var(--Important); }
 }
 .mute-btn:hover { opacity: 1; box-shadow: 0 0 10px var(--ButtonBorder); }
 
-.top-bar { position: fixed; top: 10px; left: 14px; right: 14px; display: flex; justify-content: space-between; align-items: center; font-size: 14px; opacity: 0.6; z-index: 50; }
-.top-bar a { color: var(--BodyText); text-decoration: none; }
-.top-bar a:hover { color: var(--Important); }
+.top-bar {
+    position: fixed; top: 0; left: 0; right: 0; padding: 10px 14px;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 14px; z-index: 50;
+    background: rgba(0, 0, 17, 0.88);
+    backdrop-filter: blur(3px);
+    border-bottom: 1px solid rgba(0, 255, 65, 0.15);
+}
+.top-bar a { color: var(--BodyText); text-decoration: none; opacity: 0.6; }
+.top-bar a:hover { color: var(--Important); opacity: 1; }
 .top-bar-left, .top-bar-right { display: flex; align-items: center; gap: 14px; }
 .mascot { height: 24px; width: auto; image-rendering: pixelated; vertical-align: middle; }
+
+.title-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px; margin-top: 10px; }
 
 .footer-nav { margin-top: 20px; }
 
